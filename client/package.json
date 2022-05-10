@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@vant/area-data": "^1.2.4",
     "axios": "^0.27.2",
     "echarts": "^5.3.2",
     "vant": "^2.12.47",

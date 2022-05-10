@@ -6,6 +6,9 @@ import { Field } from 'vant'
 import { Popup } from 'vant'
 import {Icon} from 'vant'
 import { Dialog } from 'vant'
+import { Area } from 'vant';
+
+
 
 Vue.config.productionTip = false
 
@@ -14,6 +17,7 @@ Vue.use(Field)
 Vue.use(Popup)
 Vue.use(Icon)
 Vue.use(Dialog)
+Vue.use(Area)
 
 /* eslint-disable no-new */
 new Vue({

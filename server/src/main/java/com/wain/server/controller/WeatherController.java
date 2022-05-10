@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class WeatherController {
     @ResponseBody
-    @RequestMapping("/weather")
+    @RequestMapping("/api/weather")
     public String weatherQuery() {
         String path = "http://gwgp-h4bqkmub7dg.n.bdcloudapi.com/day";
         String resp = "";

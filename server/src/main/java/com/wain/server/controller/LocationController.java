@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class LocationController {
     @ResponseBody
-    @RequestMapping("/location")
+    @RequestMapping("/api/location")
     public String getLocation(HttpServletRequest req) {
         String path = "https://ipaddquery.api.bdymkt.com/ip/query";
         String resp = "";

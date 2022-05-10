@@ -1,5 +1,6 @@
 <template>
   <div class="total">
+    
     <div class="header">
       <van-field
         v-model="fieldValue"
@@ -10,15 +11,15 @@
         @click="show = true"
       />
       <van-popup v-model="show" round position="bottom">
-        <van-cascader
-          v-model="cascaderValue"
-          title="请选择所在地区"
-          :options="options"
-          @close="show = false"
-          @finish="onFinish"
+        <van-area
+          title="请选择位置"
+          :area-list="areaList"
+          :columns-num="2"
+          :columns-placeholder="['自动定位']"
+          @confirm = "onConfirm"
+          @cancel = "onCancel"
         />
       </van-popup>
-      {{fieldValue}}{{cascaderValue}}
     </div>
 
     <div class="content">
@@ -33,6 +34,7 @@
       </div>
 
       <div id="AQIChart" class="myChart"></div>
+      <br>
       <div id="TChart" class="myChart"></div>
 
     </div>
@@ -42,6 +44,7 @@
 <script>
   import * as echarts from 'echarts'
   import {myRequest} from '../network/request.js'
+  import { areaList } from '@vant/area-data';
 
   export default {
     name: 'index',
@@ -49,38 +52,33 @@
       return{
         show: false,
         fieldValue: '',
-        cascaderValue: '',
         weather: '晴',
         temperature: '20°C',
         AQI: 10,
+        areaList,
         AQIdescript: '空气质量优',
         options: [
             {
-              text: '浙江省',
-              value: '330000',
-              children: [{ text: '杭州市', value: '330100' }],
+              text: '自动定位',              
             },
-            {
-              text: '江苏省',
-              value: '320000',
-              children: [{ text: '南京市', value: '320100' }],
-            },
+            
+            
         ],
         AQIOption: {
           dataset: {
               source: [
                 ['score', 'amount', 'product'],
-                [89.3, 450, '现在'],
-                [57.1, 240, '17:00'],
-                [74.4, 370, '18:00'],
-                [50.1, 50, '19:00'],
-                [89.7, 150, '20:00'],
-                [68.1, 150, '21:00'],
-                [19.6, 340, '22:00'],
-                [10.6, 140, '23:00'],
-                [32.7, 370, '24:00'],
-                [32.7, 420, '1:00'],
-                [32.7, 500, '2:00']
+                [289.3, 289.3, '现在'],
+                [157.1, 157.1, '17:00'],
+                [374.4, 374.4, '18:00'],
+                [150.1, 150.1, '19:00'],
+                [289.7, 289.7, '20:00'],
+                [68.1, 68.1, '21:00'],
+                [19.6, 19.6, '22:00'],
+                [10.6, 10.6, '23:00'],
+                [132.7, 132.7, '24:00'],
+                [32.7, 32.7, '1:00'],
+                [32.7, 32.7, '2:00']
               ]
             },
             grid: { containLabel: true },
@@ -100,12 +98,16 @@
                 }
               }
             },
+            tooltip: {
+              trigger: 'axis',
+              // formatter: '时间：{b0} s:<br />温度：{c0} °C'
+          },
             visualMap: {
               orient: 'horizontal',
               left: 'center',
-              min: 10,
-              max: 100,
-              text: ['High level', 'Low level'],
+              min: 0,
+              max: 500,
+              text: ['严重污染', '优'],
               // Map the score column to color
               dimension: 0,
               inRange: {
@@ -126,57 +128,171 @@
         },
 
         TOption:{
-          xAxis: {
-              type: 'category',
-              data: ['现在', '1：00', '2：00', '3：00', '4：00', '6：00', '7：00', '8：00', '9：00', '10：00'],
-              axisLabel:{
-                interval: 0,
-                textStyle:{
-                  fontSize:7
-                }
-              }
-            },
-            yAxis: {
-              type: 'value',
-              axisLabel:{
-                textStyle:{
-                  fontSize:7
-                }
-              }
-            },
-            series: [
-              {
-                data: [15,16,18,20,15,14,15,16,17,16],
-                type: 'line'
-              }
-            ]
+          // xAxis: {
+          //     type: 'category',
+          //     data: ['现在', '1：00', '2：00', '3：00', '4：00', '6：00', '7：00', '8：00', '9：00', '10：00'],
+          //     axisLabel:{
+          //       interval: 0,
+          //       textStyle:{
+          //         fontSize:7
+          //       }
+          //     }
+          //   },
+          //   yAxis: {
+          //     type: 'value',
+          //     axisLabel:{
+          //       textStyle:{
+          //         fontSize:7
+          //       }
+          //     }
+          //   },
+          //   series: [
+          //     {
+          //       data: [15,16,18,20,15,14,15,16,17,16],
+          //       type: 'line'
+          //     }
+          //   ]
+          title: {
+            text: '未来10小时温度折线图',
+            textStyle: {
+            color: '#1B253A',
+            fontStyle: 'normal',
+            fontFamily: '微软雅黑',
+            fontSize: 12,
+          },
+            
+        },
+        tooltip: {
+            trigger: 'axis',
+            // formatter: '时间：{b0} s:<br />温度：{c0} °C'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+        type: 'category',
+          boundaryGap: false,//坐标轴两边留白
+        data: ['现在', '1：00', '2：00', '3：00', '4：00', '6：00', '7：00', '8：00', '9：00', '10：00'],
+        axisLabel: { //坐标轴刻度标签的相关设置。
+          // interval: ,//设置为 1，表示『隔一个标签显示一个标签』
+          textStyle: {
+            color: '#1B253A',
+            fontStyle: 'normal',
+            fontFamily: '微软雅黑',
+            fontSize: 12,
+          },
+        },
+        axisTick:{//坐标轴刻度相关设置。
+          show: false,
+        },
+        axisLine:{//坐标轴轴线相关设置
+          lineStyle:{
+            color:'#E5E9ED',
+          }
+        },
+        splitLine: { //坐标轴在 grid 区域中的分隔线。
+          show: true,
+          lineStyle: {
+            color: '#E5E9ED',
+          }
+        }
+        },
+        yAxis: [
+        {
+          type: 'value',
+          name: "温度/°C",
+          splitNumber:5,
+          axisLabel: {
+            textStyle: {
+              color: '#a8aab0',
+              fontStyle: 'normal',
+              fontFamily: '微软雅黑',
+              fontSize: 12,
+              formatter: '{value} °C'
+            }
+          },
+          axisLine:{
+            show: false
+          },
+          axisTick:{
+            show: false
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#E5E9ED',
+            // 	opacity:0.1
+            }
+          }
+
+		}
+	],
+    series: [
+        {
+            name: '温度',
+            type: 'line',
+            itemStyle: {
+		        normal: {
+					color:'#3A84FF',
+		            lineStyle: {
+						color: "#3A84FF",
+						width:1
+		            },
+		            areaStyle: { 
+						color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+							offset: 0,
+							color: 'rgba(58,132,255,0)'
+						}, {
+							offset: 1,
+							color: 'rgba(58,132,255,0.35)'
+						}]),
+		            }
+		        }
+			},
+            data: [15,16,18,20,15,14,15,16,17,16],
+        }
+    ]
         }
       }
     },
-    mounted() {
+      mounted() {
       setTimeout(this.drawLine(),500)
-      // this.$dialog.alert({
-      //   title: '更多信息',
-      //   message: this.moreMsg,
-      // });
+    },
+      beforeCreate(){
+        myRequest({
+            url: '/location',
+            method: 'post',
+          }).then(res =>{
+            this.fieldValue = res.data.data.region + "省 / " + res.data.data.city + "市";
+          }).catch(err => {
+            console.log(err)
+          });
     },
     methods:{
-      onFinish({ selectedOptions }) {
-        this.show = false;
-        this.fieldValue = selectedOptions.map((option) => option.text).join('/');
-        myRequest({
-          url: '/location',
-          method: 'post',
-          // data:{
-          //   fieldValue: this.fieldValue
-          // }
-        }).then(res =>{
-          console.log(res.data);
-        }).catch(err => {
-          console.log(err)
-        });
+      onConfirm(arr){
+        if(arr[0]["name"].length == 0){
+          myRequest({
+            url: '/location',
+            method: 'post',
+          }).then(res =>{
+            this.fieldValue = res.data.data.region + "省 / " + res.data.data.city + "市";
+            this.show = false;
+          }).catch(err => {
+            console.log(err)
+            this.show = false;
+          });
+        }
+        else{
+            this.fieldValue = arr[0]["name"] + "/" + arr[1]["name"];
+            this.show = false;
+        }
       },
-
+      onCancel(){
+          this.show = false;
+      },
       changeAQIboxColor(){
         if(this.AQI>=0&&this.AQI<=50){
           this.AQIdescript = "优"

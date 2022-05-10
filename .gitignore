@@ -1,0 +1,4 @@
+/server/.mvn
+/server/target
+/client/node_modules
+/.idea

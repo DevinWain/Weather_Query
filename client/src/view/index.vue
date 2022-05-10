@@ -54,8 +54,11 @@
         fieldValue: '',
         weather: '晴',
         temperature: '20°C',
+        fut_10_temp: [15,16,18,20,15,14,15,16,17,16],
         AQI: 10,
         areaList,
+        myChart1:"",
+        myChart2:"",
         AQIdescript: '空气质量优',
         options: [
             {
@@ -92,6 +95,7 @@
             },
             yAxis: {
               name: 'AQI(空气质量)' ,
+              min: 40,
               axisLabel:{
                 textStyle:{
                   fontSize:7
@@ -128,31 +132,7 @@
         },
 
         TOption:{
-          // xAxis: {
-          //     type: 'category',
-          //     data: ['现在', '1：00', '2：00', '3：00', '4：00', '6：00', '7：00', '8：00', '9：00', '10：00'],
-          //     axisLabel:{
-          //       interval: 0,
-          //       textStyle:{
-          //         fontSize:7
-          //       }
-          //     }
-          //   },
-          //   yAxis: {
-          //     type: 'value',
-          //     axisLabel:{
-          //       textStyle:{
-          //         fontSize:7
-          //       }
-          //     }
-          //   },
-          //   series: [
-          //     {
-          //       data: [15,16,18,20,15,14,15,16,17,16],
-          //       type: 'line'
-          //     }
-          //   ]
-          title: {
+        title: {
             text: '未来10小时温度折线图',
             textStyle: {
             color: '#1B253A',
@@ -173,32 +153,33 @@
             containLabel: true
         },
         xAxis: {
-        type: 'category',
-          boundaryGap: false,//坐标轴两边留白
-        data: ['现在', '1：00', '2：00', '3：00', '4：00', '6：00', '7：00', '8：00', '9：00', '10：00'],
-        axisLabel: { //坐标轴刻度标签的相关设置。
-          // interval: ,//设置为 1，表示『隔一个标签显示一个标签』
-          textStyle: {
-            color: '#1B253A',
-            fontStyle: 'normal',
-            fontFamily: '微软雅黑',
-            fontSize: 12,
+          type: 'category',
+            boundaryGap: false,//坐标轴两边留白
+          // data: ['现在', '1：00', '2：00', '3：00', '4：00', '6：00', '7：00', '8：00', '9：00', '10：00'],
+          data: ['现在', '1：00', '2：00', '3：00', '4：00', '6：00', '7：00', '8：00', '9：00', '10：00'],
+          axisLabel: { //坐标轴刻度标签的相关设置。
+            // interval: ,//设置为 1，表示『隔一个标签显示一个标签』
+            textStyle: {
+              color: '#1B253A',
+              fontStyle: 'normal',
+              fontFamily: '微软雅黑',
+              fontSize: 12,
+            },
           },
-        },
-        axisTick:{//坐标轴刻度相关设置。
-          show: false,
-        },
-        axisLine:{//坐标轴轴线相关设置
-          lineStyle:{
-            color:'#E5E9ED',
+          axisTick:{//坐标轴刻度相关设置。
+            show: false,
+          },
+          axisLine:{//坐标轴轴线相关设置
+            lineStyle:{
+              color:'#E5E9ED',
+            }
+          },
+          splitLine: { //坐标轴在 grid 区域中的分隔线。
+            show: true,
+            lineStyle: {
+              color: '#E5E9ED',
+            }
           }
-        },
-        splitLine: { //坐标轴在 grid 区域中的分隔线。
-          show: true,
-          lineStyle: {
-            color: '#E5E9ED',
-          }
-        }
         },
         yAxis: [
         {
@@ -230,31 +211,31 @@
 
 		}
 	],
-    series: [
-        {
-            name: '温度',
-            type: 'line',
-            itemStyle: {
-		        normal: {
-					color:'#3A84FF',
-		            lineStyle: {
-						color: "#3A84FF",
-						width:1
-		            },
-		            areaStyle: { 
-						color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
-							offset: 0,
-							color: 'rgba(58,132,255,0)'
-						}, {
-							offset: 1,
-							color: 'rgba(58,132,255,0.35)'
-						}]),
-		            }
-		        }
-			},
-            data: [15,16,18,20,15,14,15,16,17,16],
-        }
-    ]
+        series: [
+          {
+                name: '温度',
+                type: 'line',
+                itemStyle: {
+                normal: {
+                    color:'#3A84FF',
+                    lineStyle: {
+                    color: "#3A84FF",
+                    width:1
+                    },
+                areaStyle: { 
+                  color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+                  offset: 0,
+                  color: 'rgba(58,132,255,0)'
+                }, {
+                  offset: 1,
+                  color: 'rgba(58,132,255,0.35)'
+                }]),
+                    }
+                }
+              },
+                data: [15,16,18,25,15,14,15,16,17,16],
+          }
+        ]
         }
       }
     },
@@ -270,6 +251,40 @@
           }).catch(err => {
             console.log(err)
           });
+        // myRequest({
+        //     url: '/weather',
+        //     method: 'post',
+        //   }).then(res =>{
+        //     this.AQI = res.data.aqi;
+        //     // this.TOption.xAxis.data = res.data.fut_10_hour;
+        //     this.TOption.xAxis.data = ['现在', '1：00', '2：00', '3：00', '4：00', '6：00', '7：00', '8：00', '9：00', '10：00'];
+        //     // this.TOption.series.data = res.data.fut_10_temp;
+        //     this.TOption.series.data = [15,16,18,20,15,14,15,16,17,16];
+        //     console.log(res.data.fut_10_hour);
+        //     console.log(res.data.fut_10_temp);
+        //   }).catch(err => {
+        //     console.log(err)
+        //   });
+        myRequest({
+            url: '/test',
+            method: 'post',
+          }).then(res =>{
+            this.AQI = res.data.aqi;
+            this.TOption.xAxis.data = res.data.fut_10_hour;
+            this.TOption.series[0].data = res.data.fut_10_temp;
+            this.AQIOption.xAxis.data = res.data.fut_10_hour;
+            this.AQIOption.dataset.source = this.getSource(res.data.fut_10_aqi, res.data.fut_10_hour);
+            this.AQIOption.yAxis.min = Math.floor(Math.min(...res.data.fut_10_aqi)*0.9);
+            this.TOption.yAxis[0].min = Math.floor(Math.min(...res.data.fut_10_temp)*0.9);
+            this.AQIOption.yAxis.max = Math.floor(Math.max(...res.data.fut_10_aqi));
+            // console.log(this.getSource(res.data.fut_10_aqi, res.data.fut_10_hour));
+            // console.log(this.AQIOption.series[0]);
+            this.myChart1.setOption(this.AQIOption);
+            this.myChart2.setOption(this.TOption);
+          }).catch(err => {
+            console.log(err)
+          });
+
     },
     methods:{
       onConfirm(arr){
@@ -280,6 +295,7 @@
           }).then(res =>{
             this.fieldValue = res.data.data.region + "省 / " + res.data.data.city + "市";
             this.show = false;
+            this.myChart2.setOption(this.TOption)
           }).catch(err => {
             console.log(err)
             this.show = false;
@@ -314,12 +330,29 @@
           return "background-color: black;"
         }
       },
+//  ['score', 'amount', 'product'],
+      getSource(fut_10_aqi, fut_10_hour){
+        var a = new Array();
+        a[0] = new Array();
+        a[0][0] = 'score';
+        a[0][1] = 'amount';
+        a[0][2] = 'product';
+        for(var i=1;i<11;i++){        //一维长度为5        
+          a[i] = new Array();        
+          for(var j=0;j<3;j++){    //二维长度为5                        
+                a[i][0] = fut_10_aqi[i-1];
+                a[i][1] = fut_10_aqi[i-1];
+                a[i][2] = fut_10_hour[i-1];
+          }        
+        }
+        return a;
+      },
 
       drawLine(){
-        let myChart = echarts.init(document.getElementById('AQIChart'))
-        myChart.setOption(this.AQIOption)
-        myChart = echarts.init(document.getElementById('TChart'))
-        myChart.setOption(this.TOption)
+        this.myChart1 = echarts.init(document.getElementById('AQIChart'))
+        // this.myChart1.setOption(this.AQIOption)
+        this.myChart2 = echarts.init(document.getElementById('TChart'))
+        // this.myChart2.setOption(this.TOption)
       }
     }
   }
